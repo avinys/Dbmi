@@ -11,10 +11,10 @@ namespace BdmiAPI.Models
         public User User { get; set; } = default!;
 
         [Required, StringLength(120)]
-        public string Title { get; set; } = default!;
+        public string? Title { get; set; } = default!;
 
         [Required, StringLength(4000)]
-        public string Body { get; set; } = default!;
+        public string? Body { get; set; } = default!;
 
         [Range(1, 10)]
         public int Score { get; set; }
