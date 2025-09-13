@@ -13,6 +13,8 @@
         [StringLength(255)]
         public string? PasswordHash { get; set; }
 
+        public bool IsSystem { get; set; } = false;
+
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Movie> UploadedMovies { get; set; } = new List<Movie>();
     }

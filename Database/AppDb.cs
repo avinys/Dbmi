@@ -51,6 +51,15 @@ namespace BdmiAPI.Database
                  .WithMany(m => m.Reviews)
                  .HasForeignKey(r => r.MovieId)
                  .OnDelete(DeleteBehavior.Cascade);
+
+            b.Entity<User>().HasData(new User
+            {
+                Id = 1,
+                Username = "deleted",
+                Email = "deleted@system.local",
+                IsSystem = true,
+                CreatedAt = DateTime.UtcNow
+            });
         }
     }
 }
