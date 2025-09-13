@@ -1,6 +1,9 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using DbmiAPI.Database;
+using BdmiAPI.Application.Genres;
+using BdmiAPI.Repositories;
+using BdmiAPI.Repositories.Interfaces;
+using BdmiAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -17,6 +20,10 @@ builder.Services.AddDbContext<AppDb>(options =>
 builder.Services.AddControllers()
     // avoid reference loop issues when returning entities with navigation props
     .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+
 
 builder.Services.AddCors(o =>
 {

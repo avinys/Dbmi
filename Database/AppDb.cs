@@ -1,7 +1,7 @@
-﻿using DbmiAPI.Models;
+﻿using BdmiAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DbmiAPI.Database
+namespace BdmiAPI.Database
 {
     public class AppDb : DbContext
     {

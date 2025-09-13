@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DbmiAPI.Models
+namespace BdmiAPI.Models
 {
     public class Review : BaseEntity
     {

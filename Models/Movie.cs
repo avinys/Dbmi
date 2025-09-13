@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 
-namespace DbmiAPI.Models
+namespace BdmiAPI.Models
 {
     public class Movie : BaseEntity
     {

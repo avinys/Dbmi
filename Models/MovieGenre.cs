@@ -1,4 +1,4 @@
-﻿namespace DbmiAPI.Models
+﻿namespace BdmiAPI.Models
 {
     public class MovieGenre
     {

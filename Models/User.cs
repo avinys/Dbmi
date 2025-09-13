@@ -1,8 +1,6 @@
-﻿namespace DbmiAPI.Models
+﻿namespace BdmiAPI.Models
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Xml.Linq;
-    using Microsoft.AspNetCore.Mvc.ViewEngines;
 
     public class User : BaseEntity
     {
