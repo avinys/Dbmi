@@ -1,4 +1,6 @@
-﻿namespace BdmiAPI.Application.Genres
+﻿using BdmiAPI.DTOs;
+
+namespace BdmiAPI.Services.Interfaces
 {
     public interface IGenreService
     {

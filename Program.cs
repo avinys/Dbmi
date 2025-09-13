@@ -1,11 +1,13 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using BdmiAPI.Application.Genres;
-using BdmiAPI.Repositories;
-using BdmiAPI.Repositories.Interfaces;
 using BdmiAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using BdmiAPI.Services.Interfaces;
+using BdmiAPI.Services;
+using BdmiAPI.Repositories.Interfaces;
+using BdmiAPI.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,9 @@ builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 
 builder.Services.AddCors(o =>
