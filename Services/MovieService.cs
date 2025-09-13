@@ -2,9 +2,10 @@
 using BdmiAPI.DTOs;
 using BdmiAPI.Models;
 using BdmiAPI.Repositories.Interfaces;
+using BdmiAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BdmiAPI.Services.Interfaces
+namespace BdmiAPI.Services
 {
     public sealed class MovieService : IMovieService
     {

@@ -70,7 +70,7 @@ namespace BdmiAPI.Controllers
 
         /// <summary>Hierarchical: all reviews for a movie (optionally include text)</summary>
         [HttpGet("{id:int}/reviews")]
-        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(MovieReviewsDto), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Reviews(int id, [FromQuery] bool includeText = false, CancellationToken ct = default)
         {
@@ -78,5 +78,4 @@ namespace BdmiAPI.Controllers
             return payload is null ? NotFound() : Ok(payload);
         }
     }
-    
 }
