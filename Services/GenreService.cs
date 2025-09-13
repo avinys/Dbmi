@@ -28,7 +28,7 @@ namespace BdmiAPI.Services
             if (await _repo.ExistsByNameAsync(dto.Name, null, ct))
                 throw new GenreConflictException($"Genre '{dto.Name}' already exists.");
 
-            var g = new Genre { Name = dto.Name.Trim() };
+            var g = new Genre { Name = dto.Name.Trim(), Description = dto.Description?.Trim() };
             await _repo.AddAsync(g, ct);
             await _repo.SaveChangesAsync(ct);
             return g.ToDetails();

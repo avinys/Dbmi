@@ -7,6 +7,9 @@ namespace BdmiAPI.Models
         [Required, StringLength(50)]
         public string Name { get; set; } = default!;
 
+        [StringLength(500)]
+        public string? Description { get; set; }
+
         public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
     }
 }

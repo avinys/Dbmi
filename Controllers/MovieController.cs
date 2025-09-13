@@ -1,4 +1,8 @@
-﻿namespace BdmiAPI.Controllers
+﻿using BdmiAPI.DTOs;
+using BdmiAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BdmiAPI.Controllers
 {
     public class MovieController
     {
