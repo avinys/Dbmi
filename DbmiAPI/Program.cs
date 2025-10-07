@@ -6,8 +6,11 @@ using BdmiAPI.Repositories;
 using BdmiAPI.Repositories.Interfaces;
 using BdmiAPI.Services;
 using BdmiAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,6 +78,12 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "bdmI API v1");
     c.RoutePrefix = "swagger"; // UI at /swagger
 });
+
+var jwtSettings = app.Configuration.GetSection("Jwt");
+app.Services.Configure<JwtSettings>(jwtSettings);
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 //app.UseHttpsRedirection();
 

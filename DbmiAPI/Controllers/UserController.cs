@@ -1,12 +1,14 @@
 ﻿using BdmiAPI.DTOs;
 using BdmiAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BdmiAPI.Api
 {
     [ApiController]
     [Route("api/users")]
     [Produces("application/json")]
+    [Authorize]
     public sealed class UsersController : ControllerBase
     {
         private readonly IUserService _svc;
@@ -62,6 +64,7 @@ namespace BdmiAPI.Api
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
             try
