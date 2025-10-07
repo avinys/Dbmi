@@ -4,7 +4,7 @@ namespace BdmiAPI.Services.Interfaces
 {
     public interface IMovieService
     {
-        Task<IReadOnlyList<MovieListItemDto>> ListAsync(int? genreId, string? q, string? sort, CancellationToken ct = default);
+        Task<IReadOnlyList<MovieListItemDto>> ListAsync(int? genreId, string? q, CancellationToken ct = default);
         Task<MovieDetailsDto?> GetAsync(int id, CancellationToken ct = default);
         Task<MovieDetailsDto> CreateAsync(CreateMovieDto dto, CancellationToken ct = default);
         Task<bool> UpdateAsync(int id, UpdateMovieDto dto, CancellationToken ct = default);

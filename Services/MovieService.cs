@@ -4,6 +4,7 @@ using BdmiAPI.Models;
 using BdmiAPI.Repositories.Interfaces;
 using BdmiAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace BdmiAPI.Services
 {
@@ -17,7 +18,7 @@ namespace BdmiAPI.Services
             _db = db;
         }
 
-        public async Task<IReadOnlyList<MovieListItemDto>> ListAsync(int? genreId, string? q, string? sort, CancellationToken ct = default)
+        public async Task<IReadOnlyList<MovieListItemDto>> ListAsync(int? genreId, string? q, CancellationToken ct = default)
         {
             var query = _repo.Query();
 
@@ -25,7 +26,10 @@ namespace BdmiAPI.Services
                 query = query.Where(m => m.MovieGenres.Any(g => g.GenreId == genreId));
 
             if (!string.IsNullOrWhiteSpace(q))
-                query = query.Where(m => m.Title.Contains(q) || m.Description.Contains(q));
+                query = query.Where(m =>
+                    (m.Title != null && EF.Functions.Like(m.Title, $"%{q}%")) ||
+                    (m.Description != null && EF.Functions.Like(m.Description, $"%{q}%"))
+                );
 
             // compute average on the fly
             var projected = query.Select(m => new MovieListItemDto(
@@ -36,13 +40,6 @@ namespace BdmiAPI.Services
                 m.MovieGenres.Select(mg => mg.Genre.Name).OrderBy(n => n).ToList(),
                 m.Reviews.Any() ? m.Reviews.Average(r => r.Score) : 0
             ));
-
-            projected = sort switch
-            {
-                "rating" => projected.OrderByDescending(x => x.AverageScore).ThenBy(x => x.Title),
-                "date" => projected.OrderByDescending(x => x.ReleaseYear).ThenBy(x => x.Title),
-                _ => projected.OrderBy(x => x.Title)
-            };
 
             return await projected.ToListAsync(ct);
         }

@@ -80,8 +80,8 @@ namespace BdmiAPI.Services
         }
 
         public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
-            => AnonymizeAndDeleteAsync(id, ct); // delegate to your implemented method
-    }
+            => AnonymizeAndDeleteAsync(id, ct);
+    
 
         public async Task<bool> AnonymizeAndDeleteAsync(int id, CancellationToken ct = default)
         {

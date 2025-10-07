@@ -1,12 +1,13 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using BdmiAPI.Database;
+using BdmiAPI.Infrastructure;
+using BdmiAPI.Repositories;
+using BdmiAPI.Repositories.Interfaces;
+using BdmiAPI.Services;
+using BdmiAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using BdmiAPI.Services.Interfaces;
-using BdmiAPI.Services;
-using BdmiAPI.Repositories.Interfaces;
-using BdmiAPI.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,12 +56,15 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// --- Apply pending migrations automatically (handy for demo/defense) ---
+// --- Apply pending migrations automatically ---
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDb>();
     db.Database.Migrate();
-    // TODO: call your seed method here if you add one.
+    await DbInitializer.SeedUsersAsync(db);
+    await DbInitializer.SeedGenresAsync(db);
+    await DbInitializer.SeedMoviesAsync(db);
+    await DbInitializer.SeedReviewsAsync(db);
 }
 
 // --- Middleware ---
@@ -72,13 +76,8 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger"; // UI at /swagger
 });
 
-app.UseHttpsRedirection(); // optional; keep if you’ll run with https
+//app.UseHttpsRedirection();
 
 app.MapControllers();
 
 app.Run();
-
-// NOTE:
-// - Ensure you have appsettings.Development.json with ConnectionStrings:DefaultConnection.
-// - Packages needed: Pomelo.EntityFrameworkCore.MySql, Microsoft.EntityFrameworkCore.Design, Swashbuckle.AspNetCore.
-// - Controllers should use [ApiController] to auto-return 400 on invalid DTOs.

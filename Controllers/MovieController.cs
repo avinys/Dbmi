@@ -12,11 +12,11 @@ namespace BdmiAPI.Controllers
         private readonly IMovieService _svc;
         public MoviesController(IMovieService svc) => _svc = svc;
 
-        /// <summary>List movies with optional filters: genreId, q; sort: title|rating|date</summary>
+        /// <summary>List movies with optional filters: genreId, q</summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<MovieListItemDto>), 200)]
-        public async Task<IActionResult> List([FromQuery] int? genreId, [FromQuery] string? q, [FromQuery] string? sort, CancellationToken ct)
-            => Ok(await _svc.ListAsync(genreId, q, sort, ct));
+        public async Task<IActionResult> List([FromQuery] int? genreId, [FromQuery] string? q, CancellationToken ct)
+            => Ok(await _svc.ListAsync(genreId, q, ct));
 
         /// <summary>Get movie details</summary>
         [HttpGet("{id:int}")]
