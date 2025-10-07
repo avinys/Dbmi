@@ -1,0 +1,1341 @@
+{
+	"info": {
+		"_postman_id": "f87d57e0-5f57-4390-aa50-9cd7a3a9b5e1",
+		"name": "Bdmi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49075896",
+		"_collection_link": "https://arvydas-vingis1-5865210.postman.co/workspace/Arvydas-Vingis's-Workspace~3efc599a-b8cf-4cfb-8ed0-091edcbbbc20/collection/49075896-f87d57e0-5f57-4390-aa50-9cd7a3a9b5e1?action=share&source=collection_link&creator=49075896"
+	},
+	"item": [
+		{
+			"name": "Genres",
+			"item": [
+				{
+					"name": "OK",
+					"item": [
+						{
+							"name": "List genres (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"packages": {},
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/genres",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create genre (201)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set('ts', Date.now().toString());"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('201 Created', () => pm.response.to.have.status(201));",
+											"const body = pm.response.json();",
+											"pm.collectionVariables.set('genreId', body.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Postman-test\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/genres",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get genre by id (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/genres/2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update genre (204)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Postman-Updated-test\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/genres/{{genreId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres",
+										"{{genreId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete genre (204)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content (delete)', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/genres/{{genreId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres",
+										"{{genreId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "not OK",
+					"item": [
+						{
+							"name": "Get after delete (404)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('404 Not Found after delete', () => pm.response.to.have.status(404));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/genres/{{genreId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres",
+										"{{genreId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Bad JSON payload (400)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('400 Bad Request for malformed JSON', () => pm.response.to.have.status(400));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"surname\": \"Bad JSON\"}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/genres",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"genres"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "OK",
+					"item": [
+						{
+							"name": "List movies (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));",
+											"pm.test('JSON array', () => {",
+											"  pm.response.to.be.json;",
+											"  const body = pm.response.json();",
+											"  pm.expect(Array.isArray(body)).to.be.true;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/movies",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create movie (201)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('201 Created', () => pm.response.to.have.status(201));",
+											"const body = pm.response.json();",
+											"pm.collectionVariables.set('movieId', body.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Postman-test\",\n  \"description\": \"Test movie created by Postman\",\n  \"releaseYear\": 2014,\n  \"durationMin\": 120,\n  \"uploadedByUserId\": 2,\n  \"genreIds\": [1]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/movies",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get created movie (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));",
+											"const body = pm.response.json();",
+											"pm.test('Id matches', () => pm.expect(body.id.toString()).to.eql(pm.collectionVariables.get('movieId').toString()));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/movies/{{movieId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies",
+										"{{movieId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update movie (204)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Postman-Updated-test\",\n  \"description\": \"Updated by Postman\",\n  \"releaseYear\": 2015,\n  \"durationMin\": 125,\n  \"genreIds\": [4]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/movies/{{movieId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies",
+										"{{movieId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete movie (204)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content (delete)', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/movies/{{movieId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies",
+										"{{movieId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Reviews for Movie (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/movies/5/reviews?includeText=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies",
+										"5",
+										"reviews"
+									],
+									"query": [
+										{
+											"key": "includeText",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "not OK",
+					"item": [
+						{
+							"name": "Get after delete (404)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('404 Not Found after delete', () => pm.response.to.have.status(404));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/movies/{{movieId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies",
+										"{{movieId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create invalid movie (expect 422) - non-existing GenreId",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('422 Unprocessable Entity (domain validation)', () => {",
+											"  pm.expect(pm.response.code).to.eql(422);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Invalid-test\",\n  \"description\": \"Non-existing genre should fail domain validation\",\n  \"releaseYear\": 2012,\n  \"durationMin\": 100,\n  \"uploadedByUserId\": 2,\n  \"genreIds\": [999999999]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/movies",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Bad JSON payload (400)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('400 Bad Request for malformed JSON', () => pm.response.to.have.status(400));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"title\": \"Bad JSON\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/movies",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"movies"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "OK",
+					"item": [
+						{
+							"name": "List reviews (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get review by id (200) - uses existingReviewId or reviewId",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const id = pm.collectionVariables.get('existingReviewId') || pm.collectionVariables.get('reviewId');",
+											"pm.collectionVariables.set('tmpGetId', id || '');"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK (get)', () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/reviews/4",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create review (201)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('201 Created', () => pm.response.to.have.status(201));",
+											"const body = pm.response.json();",
+											"pm.collectionVariables.set('reviewId', body.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"movieId\": 9,\n  \"userId\": 3,\n  \"score\": 7,\n  \"title\": \"PM-test\",\n  \"body\": \"Created from Postman\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update review (204)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"score\": 9,\n  \"title\": \"Updated-test\",\n  \"body\": \"Updated from Postman\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews/{{reviewId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews",
+										"{{reviewId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete review (204)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const id = pm.collectionVariables.get('deleteReviewId') || pm.collectionVariables.get('reviewId');",
+											"pm.collectionVariables.set('tmpDeleteId', id || '');"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content (delete)', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/reviews/{{reviewId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews",
+										"{{reviewId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "not OK",
+					"item": [
+						{
+							"name": "Create review (201) Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('201 Created', () => pm.response.to.have.status(201));",
+											"const body = pm.response.json();",
+											"pm.collectionVariables.set('reviewId', body.id);",
+											"pm.test('Has id', () => pm.expect(body.id).to.exist);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"movieId\": 9,\n  \"userId\": 3,\n  \"score\": 7,\n  \"title\": \"PM-{{ts}}\",\n  \"body\": \"Created from Postman\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create duplicate (409)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('409 Conflict (duplicate)', () => pm.response.to.have.status(409));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"packages": {},
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"movieId\": 9,\n  \"userId\": 3,\n  \"score\": 8,\n  \"title\": \"Duplicate attempt\",\n  \"body\": \"One review per user per movie\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Bad JSON payload (400)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('400 Bad Request (malformed JSON)', () => pm.response.to.have.status(400));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"movieIdIdId\":9}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete non-existing (404)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('404 Not Found (delete)', () => pm.response.to.have.status(404));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/9999999",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"9999999"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "cleanup",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "OK",
+					"item": [
+						{
+							"name": "List users (200)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK', () => pm.response.to.have.status(200));",
+											"pm.response.to.be.json;",
+											"const body = pm.response.json();",
+											"pm.test('Array', () => pm.expect(Array.isArray(body)).to.be.true);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get user by id (200)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const id = pm.collectionVariables.get('existingUserId') || pm.collectionVariables.get('userId');",
+											"pm.collectionVariables.set('tmpGetId', id || '');"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('200 OK (get)', () => pm.response.to.have.status(200));",
+											"pm.response.to.be.json;",
+											"const body = pm.response.json();",
+											"pm.test('Has Id', () => pm.expect(body.id).to.exist);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create user (201)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('201 Created', () => pm.response.to.have.status(201));",
+											"pm.response.to.be.json;",
+											"const body = pm.response.json();",
+											"pm.collectionVariables.set('userId', body.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"Postman User Test\",\n  \"email\": \"postman-test@example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update user (204)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const id = pm.collectionVariables.get('updateUserId') || pm.collectionVariables.get('userId');",
+											"pm.collectionVariables.set('tmpUpdateId', id || '');",
+											"pm.collectionVariables.set('ts', Date.now().toString());"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"postman-updated-name\",\n  \"email\": \"postman-updated-name@example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete user (204)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('204 No Content (delete)', () => pm.response.to.have.status(204));"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "not OK",
+					"item": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "genreId",
+			"value": ""
+		},
+		{
+			"key": "movieId",
+			"value": ""
+		},
+		{
+			"key": "reviewId",
+			"value": ""
+		},
+		{
+			"key": "tmpDeleteId",
+			"value": ""
+		},
+		{
+			"key": "tmpGetId",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "tmpUpdateId",
+			"value": ""
+		},
+		{
+			"key": "ts",
+			"value": ""
+		}
+	]
+}
