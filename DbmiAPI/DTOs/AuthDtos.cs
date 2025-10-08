@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 public sealed class LoginDto
 {
     [Required]

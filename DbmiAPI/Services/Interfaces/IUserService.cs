@@ -1,15 +1,14 @@
 ﻿using BdmiAPI.DTOs;
+using System.Security.Claims;
 
 namespace BdmiAPI.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<IReadOnlyList<UserListItemDto>> ListAsync(string? q, CancellationToken ct = default);
-        Task<UserDetailsDto?> GetAsync(int id, CancellationToken ct = default);
-        Task<UserDetailsDto> CreateAsync(CreateUserDto dto, CancellationToken ct = default);
-        Task<bool> UpdateAsync(int id, UpdateUserDto dto, CancellationToken ct = default);
-        Task<bool> DeleteAsync(int id, CancellationToken ct = default);
-        Task<bool> AnonymizeAndDeleteAsync(int id, CancellationToken ct = default);
+        Task<IReadOnlyList<UserListItemDto>> ListAsync(string? q, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<UserDetailsDto?> GetAsync(int id, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<bool> UpdateAsync(int id, UpdateUserDto dto, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<bool> DeleteAsync(int id, ClaimsPrincipal user, CancellationToken ct = default);
     }
 
     public sealed class UserConflictException : Exception

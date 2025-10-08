@@ -8,7 +8,6 @@ namespace BdmiAPI.Api
     [ApiController]
     [Route("api/users")]
     [Produces("application/json")]
-    [Authorize]
     public sealed class UsersController : ControllerBase
     {
         private readonly IUserService _svc;
@@ -16,35 +15,35 @@ namespace BdmiAPI.Api
 
         /// <summary>List users (optional query q matches username or email)</summary>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<UserListItemDto>), 200)]
         public async Task<IActionResult> List([FromQuery] string? q, CancellationToken ct)
-            => Ok(await _svc.ListAsync(q, ct));
+        {
+            try
+            {
+                return Ok(await _svc.ListAsync(q, User, ct));
+            }
+            catch (UnauthorizedAccessException) { return Forbid(); }
+        }
 
         /// <summary>Get a single user</summary>
         [HttpGet("{id:int}")]
+        [Authorize]
         [ProducesResponseType(typeof(UserDetailsDto), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Get(int id, CancellationToken ct)
-            => (await _svc.GetAsync(id, ct)) is { } dto ? Ok(dto) : NotFound();
-
-        /// <summary>Create a user</summary>
-        [HttpPost]
-        [ProducesResponseType(typeof(UserDetailsDto), 201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(409)]
-        public async Task<IActionResult> Create([FromBody] CreateUserDto dto, CancellationToken ct)
         {
-            if (!ModelState.IsValid) return ValidationProblem();
             try
             {
-                var created = await _svc.CreateAsync(dto, ct);
-                return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+                var dto = await _svc.GetAsync(id, User, ct);
+                return dto is not null ? Ok(dto) : NotFound();
             }
-            catch (UserConflictException ex) { return Conflict(new { error = ex.Message }); }
+            catch (UnauthorizedAccessException) { return Forbid(); }
         }
 
         /// <summary>Update a user</summary>
         [HttpPut("{id:int}")]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
@@ -53,25 +52,27 @@ namespace BdmiAPI.Api
             if (!ModelState.IsValid) return ValidationProblem();
             try
             {
-                var ok = await _svc.UpdateAsync(id, dto, ct);
+                var ok = await _svc.UpdateAsync(id, dto, User, ct);
                 return ok ? NoContent() : NotFound();
             }
+            catch (UnauthorizedAccessException) { return Forbid(); }
             catch (UserConflictException ex) { return Conflict(new { error = ex.Message }); }
         }
 
         /// <summary>Delete a user (anonymizes content first)</summary>
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
             try
             {
-                var ok = await _svc.DeleteAsync(id, ct);
+                var ok = await _svc.DeleteAsync(id, User, ct);
                 return ok ? NoContent() : NotFound();
             }
+            catch (UnauthorizedAccessException) { return Forbid(); }
             catch (UserForbiddenOperationException ex) { return Conflict(new { error = ex.Message }); }
             catch (InvalidOperationException ex) { return Conflict(new { error = ex.Message }); }
         }

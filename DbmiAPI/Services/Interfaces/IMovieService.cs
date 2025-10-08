@@ -1,17 +1,17 @@
-﻿using BdmiAPI.DTOs;
+﻿using System.Security.Claims;
+using BdmiAPI.DTOs;
 
 namespace BdmiAPI.Services.Interfaces
 {
     public interface IMovieService
     {
-        Task<IReadOnlyList<MovieListItemDto>> ListAsync(int? genreId, string? q, CancellationToken ct = default);
-        Task<MovieDetailsDto?> GetAsync(int id, CancellationToken ct = default);
-        Task<MovieDetailsDto> CreateAsync(CreateMovieDto dto, CancellationToken ct = default);
-        Task<bool> UpdateAsync(int id, UpdateMovieDto dto, CancellationToken ct = default);
-        Task<bool> DeleteAsync(int id, CancellationToken ct = default);
-
-        // hierarchical
-        Task<object?> GetReviewsForMovieAsync(int id, bool includeText, CancellationToken ct = default);
+        Task<IReadOnlyList<MovieListItemDto>> ListAsync(int? genreId, string? q, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<MovieDetailsDto?> GetAsync(int id, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<MovieDetailsDto> CreateAsync(CreateMovieDto dto, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<bool> UpdateAsync(int id, UpdateMovieDto dto, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<bool> DeleteAsync(int id, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<bool> ApproveAsync(int id, ClaimsPrincipal user, CancellationToken ct = default);
+        Task<bool> RejectAsync(int id, ClaimsPrincipal user, CancellationToken ct = default);
     }
 
     public sealed class MovieConflictException : Exception

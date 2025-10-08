@@ -12,6 +12,7 @@ namespace BdmiAPI.Database
         public DbSet<Movie> Movies => Set<Movie>();
         public DbSet<MovieGenre> MovieGenres => Set<MovieGenre>();
         public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -20,6 +21,17 @@ namespace BdmiAPI.Database
             // Users
             b.Entity<User>().HasIndex(u => u.Email).IsUnique();
             b.Entity<User>().HasIndex(u => u.Username).IsUnique();
+
+            // RefreshTokens
+            b.Entity<RefreshToken>()
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            b.Entity<RefreshToken>()
+                .HasIndex(rt => rt.Token)
+                .IsUnique();
 
             // MovieGenre M:N
             b.Entity<MovieGenre>().HasKey(mg => new { mg.MovieId, mg.GenreId });

@@ -2,8 +2,10 @@
 using BdmiAPI.DTOs;
 using BdmiAPI.Models;
 using BdmiAPI.Repositories.Interfaces;
+using BdmiAPI.Services.Authorization;
 using BdmiAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BdmiAPI.Services
 {
@@ -20,24 +22,32 @@ namespace BdmiAPI.Services
             _db = db;
         }
 
-        public async Task<IReadOnlyList<UserListItemDto>> ListAsync(string? q, CancellationToken ct = default)
+        public async Task<IReadOnlyList<UserListItemDto>> ListAsync(string? q, ClaimsPrincipal user, CancellationToken ct = default)
         {
+            // Only admins can list all users
+            if (!AuthorizationHelper.IsAdmin(user))
+                throw new UnauthorizedAccessException("Only administrators can list users.");
+
             var query = _repo.Query();
             if (!string.IsNullOrWhiteSpace(q))
                 query = query.Where(u => u.Username.Contains(q) || u.Email.Contains(q));
 
-            var list = await query
+            return await query
                 .OrderBy(u => u.Username)
                 .Select(u => new UserListItemDto(u.Id, u.Username, u.Email, u.CreatedAt))
                 .ToListAsync(ct);
-
-            return list;
         }
 
-        public async Task<UserDetailsDto?> GetAsync(int id, CancellationToken ct = default)
+        public async Task<UserDetailsDto?> GetAsync(int id, ClaimsPrincipal user, CancellationToken ct = default)
         {
-            var u = await _repo.GetByIdAsync(id, ct);
-            return u is null ? null : new UserDetailsDto(u.Id, u.Username, u.Email, u.CreatedAt);
+            var entity = await _repo.GetByIdAsync(id, ct);
+            if (entity is null) return null;
+
+            // Users can only view their own profile unless they're admin
+            if (!AuthorizationHelper.CanModifyResource(user, id))
+                throw new UnauthorizedAccessException("You can only view your own profile.");
+
+            return new UserDetailsDto(entity.Id, entity.Username, entity.Email, entity.CreatedAt);
         }
 
         public async Task<UserDetailsDto> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
@@ -58,10 +68,14 @@ namespace BdmiAPI.Services
             return new UserDetailsDto(entity.Id, entity.Username, entity.Email, entity.CreatedAt);
         }
 
-        public async Task<bool> UpdateAsync(int id, UpdateUserDto dto, CancellationToken ct = default)
+        public async Task<bool> UpdateAsync(int id, UpdateUserDto dto, ClaimsPrincipal user, CancellationToken ct = default)
         {
             var entity = await _db.Users.FirstOrDefaultAsync(u => u.Id == id, ct);
             if (entity is null) return false;
+
+            // Users can only update their own profile unless they're admin
+            if (!AuthorizationHelper.CanModifyResource(user, id))
+                throw new UnauthorizedAccessException("You can only update your own profile.");
 
             var username = dto.Username.Trim();
             var email = dto.Email.Trim();
@@ -79,8 +93,13 @@ namespace BdmiAPI.Services
             return true;
         }
 
-        public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
-            => AnonymizeAndDeleteAsync(id, ct);
+        public async Task<bool> DeleteAsync(int id, ClaimsPrincipal user, CancellationToken ct = default)
+        {
+            if (!AuthorizationHelper.IsAdmin(user))
+                throw new UnauthorizedAccessException("Only administrators can delete users.");
+
+            return await AnonymizeAndDeleteAsync(id, ct);
+        }
     
 
         public async Task<bool> AnonymizeAndDeleteAsync(int id, CancellationToken ct = default)
